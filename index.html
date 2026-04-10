@@ -259,6 +259,64 @@
     letter-spacing: 0.05em;
   }
 
+  /* 登记表单 */
+  .rsvp-section {
+    display: none; margin-top: 36px;
+    background: var(--card-bg); border: 1px solid #222;
+    border-radius: 4px; padding: 24px;
+  }
+  .rsvp-section.show { display: block; animation: fadeSlide 0.6s ease 0.3s both; }
+  .rsvp-section h3 {
+    font-size: 0.85rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--neon-blue);
+    margin-bottom: 6px;
+  }
+  .rsvp-hint {
+    font-size: 0.82rem; color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-group input,
+  .form-group select {
+    width: 100%; padding: 12px 16px;
+    background: #0d0d14; border: 1px solid #222;
+    border-radius: 3px; color: var(--text);
+    font-size: 0.92rem; font-family: inherit;
+    transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none; border-color: var(--neon-blue);
+    box-shadow: 0 0 8px rgba(0,229,255,0.15);
+  }
+  .form-group input::placeholder { color: #555; }
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: #12121a; color: var(--text); }
+  .btn-submit {
+    width: 100%; padding: 13px;
+    background: transparent; border: 1px solid var(--neon-pink);
+    color: var(--neon-pink); font-size: 0.95rem;
+    font-weight: 700; letter-spacing: 0.1em;
+    border-radius: 3px; cursor: pointer;
+    font-family: inherit; transition: all 0.3s;
+  }
+  .btn-submit:hover {
+    background: var(--neon-pink); color: #fff;
+    box-shadow: 0 0 20px rgba(255,45,107,0.4);
+  }
+  .submit-success {
+    display: none; text-align: center;
+    margin-top: 16px; padding: 16px;
+    border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 3px;
+  }
+  .submit-success.show { display: block; animation: fadeSlide 0.4s ease; }
+  .submit-success p {
+    color: var(--neon-blue); font-size: 1rem;
+    font-weight: 700; letter-spacing: 0.05em;
+  }
+
   /* 底部水渍装饰 */
   .wet-stain {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -349,6 +407,35 @@
       </ul>
     </div>
 
+    <!-- 登记表单 -->
+    <div class="rsvp-section" id="rsvpSection">
+      <h3>确认参加</h3>
+      <p class="rsvp-hint">留下你的信息，我们好准备位置给你</p>
+      <form action="https://formsubmit.co/1354057041@qq.com" method="POST" id="rsvpForm">
+        <input type="hidden" name="_subject" value="🔔 活动报名确认 - 朋克×回南天 4.18">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="javascript:void(0)">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="你的名字 / 昵称" required>
+        </div>
+        <div class="form-group">
+          <select name="attendance" required>
+            <option value="" disabled selected>你确定来吗？</option>
+            <option value="确定参加 ✅">确定参加 ✅</option>
+            <option value="可能参加 🤔">可能参加 🤔</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="text" name="note" placeholder="有什么想说的？（选填）">
+        </div>
+        <button type="submit" class="btn-submit" id="submitBtn">提交确认 🤘</button>
+      </form>
+      <div class="submit-success" id="submitSuccess">
+        <p>已收到！4.18 见 🖤</p>
+      </div>
+    </div>
+
     <div class="footer" id="footer">
       <p>SEE YOU IN THE HUMID 🖤</p>
     </div>
@@ -383,15 +470,38 @@ function choose(willing) {
     document.getElementById('rejectMsg').classList.remove('show');
     document.getElementById('timeline').classList.add('show');
     document.getElementById('rules').classList.add('show');
+    document.getElementById('rsvpSection').classList.add('show');
     document.getElementById('footer').classList.add('show');
   } else {
     document.getElementById('btnNo').classList.add('active');
     document.getElementById('timeline').classList.remove('show');
     document.getElementById('rules').classList.remove('show');
+    document.getElementById('rsvpSection').classList.remove('show');
     document.getElementById('footer').classList.remove('show');
     document.getElementById('rejectMsg').classList.add('show');
   }
 }
+
+// 表单提交（AJAX，不跳转）
+document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '提交中...';
+  btn.disabled = true;
+
+  try {
+    const formData = new FormData(this);
+    await fetch(this.action, {
+      method: 'POST',
+      body: formData
+    });
+    document.getElementById('rsvpForm').style.display = 'none';
+    document.getElementById('submitSuccess').classList.add('show');
+  } catch(err) {
+    btn.textContent = '提交失败，请重试';
+    btn.disabled = false;
+  }
+});
 
 init();
 </script>
