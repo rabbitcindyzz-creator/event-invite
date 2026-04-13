@@ -1,510 +1,530 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EVENT</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVENT INVITE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --neon-pink: #ff2d6b;
-    --neon-blue: #00e5ff;
-    --dark-bg: #0a0a0f;
-    --card-bg: #12121a;
-    --mist: rgba(255,255,255,0.03);
-    --text: #e0e0e0;
-    --text-dim: #888;
-  }
+    :root {
+      --bg: #0a0a10;
+      --card: #13131c;
+      --line: #242433;
+      --text: #e8e8ee;
+      --muted: #a0a0b0;
+      --accent-a: #ff2d6b;
+      --accent-b: #00d9ff;
+      --ok: #46d08c;
+      --warn: #ffbf66;
+    }
 
-  body {
-    font-family: 'Noto Sans SC', sans-serif;
-    background: var(--dark-bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(0, 217, 255, 0.12), transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(255, 45, 107, 0.10), transparent 45%),
+        linear-gradient(180deg, #0a0a10, #0d0d16 50%, #09090f);
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+    }
 
-  /* === 回南天雾气效果 === */
-  .mist-layer {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0;
-    background:
-      radial-gradient(ellipse at 20% 80%, rgba(0,229,255,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(255,45,107,0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%);
-    animation: mistDrift 12s ease-in-out infinite alternate;
-  }
-  @keyframes mistDrift {
-    0% { opacity: 0.6; transform: translateY(0); }
-    100% { opacity: 1; transform: translateY(-15px); }
-  }
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
 
-  /* 水滴效果 */
-  .droplets {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 1;
-    background-image:
-      radial-gradient(1px 1px at 10% 20%, rgba(0,229,255,0.3), transparent),
-      radial-gradient(1px 1px at 30% 60%, rgba(255,45,107,0.2), transparent),
-      radial-gradient(1.5px 1.5px at 50% 10%, rgba(0,229,255,0.25), transparent),
-      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.15), transparent),
-      radial-gradient(1px 1px at 90% 80%, rgba(0,229,255,0.2), transparent),
-      radial-gradient(1.5px 1.5px at 15% 90%, rgba(255,45,107,0.15), transparent),
-      radial-gradient(1px 1px at 60% 75%, rgba(255,255,255,0.1), transparent),
-      radial-gradient(1px 1px at 85% 15%, rgba(0,229,255,0.2), transparent);
-    animation: dropFall 8s linear infinite;
-  }
-  @keyframes dropFall {
-    0% { transform: translateY(-10px); opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { transform: translateY(10px); opacity: 0.5; }
-  }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 28px 22px;
+      backdrop-filter: blur(3px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    }
 
-  .container {
-    position: relative; z-index: 2;
-    max-width: 520px; margin: 0 auto;
-    padding: 60px 24px 80px;
-    min-height: 100vh;
-  }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--accent-b);
+      border: 1px solid rgba(0,217,255,0.4);
+      padding: 4px 10px;
+      margin-bottom: 14px;
+    }
 
-  /* === 敬请期待模式 === */
-  .coming-soon {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    min-height: 80vh; text-align: center;
-  }
-  .coming-soon h1 {
-    font-size: 2.4rem; font-weight: 900;
-    letter-spacing: 0.3em; text-transform: uppercase;
-    background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: glitch 4s ease-in-out infinite;
-  }
-  .coming-soon p {
-    margin-top: 16px; color: var(--text-dim);
-    font-size: 0.95rem; letter-spacing: 0.15em;
-  }
-  .coming-soon .bar {
-    margin-top: 32px; width: 60px; height: 2px;
-    background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes glitch {
-    0%, 90%, 100% { transform: none; }
-    92% { transform: translate(-2px, 1px) skewX(-1deg); }
-    94% { transform: translate(2px, -1px) skewX(1deg); }
-    96% { transform: none; }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.4; width: 60px; }
-    50% { opacity: 1; width: 100px; }
-  }
+    h1 {
+      font-size: 28px;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
 
-  /* === 邀请函模式 === */
-  .invite-mode { display: none; }
-  .invite-mode.active { display: block; }
-  .coming-soon.hidden { display: none; }
+    .highlight {
+      background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
 
-  /* 头部 */
-  .header {
-    text-align: center; margin-bottom: 40px;
-  }
-  .header .tag {
-    display: inline-block;
-    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--neon-blue);
-    border: 1px solid rgba(0,229,255,0.3);
-    padding: 4px 14px; border-radius: 2px;
-    margin-bottom: 16px;
-  }
-  .header h1 {
-    font-size: 2rem; font-weight: 900;
-    letter-spacing: 0.08em; line-height: 1.3;
-  }
-  .header h1 .highlight {
-    background: linear-gradient(135deg, var(--neon-pink), #ff6b9d);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .header .date {
-    margin-top: 12px; font-size: 1.1rem;
-    color: var(--neon-pink); font-weight: 700;
-    letter-spacing: 0.1em;
-  }
-  .header .desc {
-    margin-top: 12px; font-size: 0.9rem;
-    color: var(--text-dim); line-height: 1.7;
-  }
+    .lead {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
 
-  /* 选择区 */
-  .choice-section {
-    text-align: center; margin: 36px 0;
-  }
-  .choice-section .question {
-    font-size: 1rem; color: var(--text);
-    margin-bottom: 20px; letter-spacing: 0.05em;
-  }
-  .btn-group {
-    display: flex; gap: 16px; justify-content: center;
-  }
-  .btn {
-    padding: 12px 36px; border: 1px solid;
-    border-radius: 3px; font-size: 1rem;
-    font-weight: 700; letter-spacing: 0.1em;
-    cursor: pointer; transition: all 0.3s;
-    background: transparent;
-    font-family: inherit;
-  }
-  .btn-yes {
-    color: var(--neon-pink); border-color: var(--neon-pink);
-  }
-  .btn-yes:hover, .btn-yes.active {
-    background: var(--neon-pink); color: #fff;
-    box-shadow: 0 0 20px rgba(255,45,107,0.4);
-  }
-  .btn-no {
-    color: var(--text-dim); border-color: #333;
-  }
-  .btn-no:hover, .btn-no.active {
-    background: #333; color: #fff;
-  }
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      margin: 18px 0 22px;
+    }
 
-  /* 时间线 */
-  .timeline {
-    display: none; margin-top: 32px;
-    border-left: 2px solid rgba(0,229,255,0.2);
-    padding-left: 24px;
-  }
-  .timeline.show { display: block; animation: fadeSlide 0.6s ease; }
+    .section-title {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: var(--accent-a);
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
 
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .step { display: none; }
+    .step.active { display: block; }
 
-  .tl-item {
-    position: relative; margin-bottom: 28px;
-  }
-  .tl-item::before {
-    content: ''; position: absolute;
-    left: -30px; top: 4px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--neon-blue);
-    box-shadow: 0 0 8px rgba(0,229,255,0.5);
-  }
-  .tl-time {
-    font-size: 0.8rem; color: var(--neon-blue);
-    font-weight: 700; letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-  .tl-title {
-    font-size: 1rem; font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .tl-desc {
-    font-size: 0.85rem; color: var(--text-dim);
-    line-height: 1.6;
-  }
+    .field { margin-bottom: 14px; }
+    .label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
 
-  /* 规则区 */
-  .rules {
-    display: none; margin-top: 36px;
-    background: var(--card-bg); border: 1px solid #222;
-    border-radius: 4px; padding: 20px 24px;
-  }
-  .rules.show { display: block; animation: fadeSlide 0.6s ease 0.2s both; }
-  .rules h3 {
-    font-size: 0.85rem; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--neon-pink);
-    margin-bottom: 12px;
-  }
-  .rules ul {
-    list-style: none; padding: 0;
-  }
-  .rules li {
-    font-size: 0.88rem; color: var(--text-dim);
-    padding: 6px 0; border-bottom: 1px solid #1a1a22;
-    line-height: 1.6;
-  }
-  .rules li:last-child { border-bottom: none; }
-  .rules li::before {
-    content: '⚡'; margin-right: 8px;
-  }
+    input, textarea, select {
+      width: 100%;
+      background: #0c0c14;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 12px 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
 
-  /* 底部 */
-  .footer {
-    display: none; text-align: center;
-    margin-top: 48px; padding-top: 24px;
-    border-top: 1px solid #1a1a22;
-  }
-  .footer.show { display: block; }
-  .footer p {
-    font-size: 0.8rem; color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
+    textarea { min-height: 88px; resize: vertical; }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-b);
+      box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.12);
+    }
 
-  /* 拒绝提示 */
-  .reject-msg {
-    display: none; text-align: center;
-    margin-top: 40px; padding: 32px;
-  }
-  .reject-msg.show { display: block; animation: fadeSlide 0.5s ease; }
-  .reject-msg p {
-    font-size: 1rem; color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
 
-  /* 登记表单 */
-  .rsvp-section {
-    display: none; margin-top: 36px;
-    background: var(--card-bg); border: 1px solid #222;
-    border-radius: 4px; padding: 24px;
-  }
-  .rsvp-section.show { display: block; animation: fadeSlide 0.6s ease 0.3s both; }
-  .rsvp-section h3 {
-    font-size: 0.85rem; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--neon-blue);
-    margin-bottom: 6px;
-  }
-  .rsvp-hint {
-    font-size: 0.82rem; color: var(--text-dim);
-    margin-bottom: 20px;
-  }
-  .form-group { margin-bottom: 14px; }
-  .form-group input,
-  .form-group select {
-    width: 100%; padding: 12px 16px;
-    background: #0d0d14; border: 1px solid #222;
-    border-radius: 3px; color: var(--text);
-    font-size: 0.92rem; font-family: inherit;
-    transition: border-color 0.3s;
-    -webkit-appearance: none;
-  }
-  .form-group input:focus,
-  .form-group select:focus {
-    outline: none; border-color: var(--neon-blue);
-    box-shadow: 0 0 8px rgba(0,229,255,0.15);
-  }
-  .form-group input::placeholder { color: #555; }
-  .form-group select { cursor: pointer; }
-  .form-group select option { background: #12121a; color: var(--text); }
-  .btn-submit {
-    width: 100%; padding: 13px;
-    background: transparent; border: 1px solid var(--neon-pink);
-    color: var(--neon-pink); font-size: 0.95rem;
-    font-weight: 700; letter-spacing: 0.1em;
-    border-radius: 3px; cursor: pointer;
-    font-family: inherit; transition: all 0.3s;
-  }
-  .btn-submit:hover {
-    background: var(--neon-pink); color: #fff;
-    box-shadow: 0 0 20px rgba(255,45,107,0.4);
-  }
-  .submit-success {
-    display: none; text-align: center;
-    margin-top: 16px; padding: 16px;
-    border: 1px solid rgba(0,229,255,0.3);
-    border-radius: 3px;
-  }
-  .submit-success.show { display: block; animation: fadeSlide 0.4s ease; }
-  .submit-success p {
-    color: var(--neon-blue); font-size: 1rem;
-    font-weight: 700; letter-spacing: 0.05em;
-  }
+    .opt {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.01);
+    }
 
-  /* 底部水渍装饰 */
-  .wet-stain {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    height: 120px; pointer-events: none; z-index: 0;
-    background: linear-gradient(to top, rgba(0,229,255,0.03), transparent);
-  }
-</style>
+    .opt small {
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid;
+      background: transparent;
+      color: var(--text);
+      padding: 11px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-primary {
+      border-color: var(--accent-a);
+      color: var(--accent-a);
+    }
+
+    .btn-primary:hover { background: rgba(255, 45, 107, 0.12); }
+
+    .btn-secondary {
+      border-color: #3b3b4f;
+      color: #cfcfe0;
+    }
+
+    .btn-secondary:hover { background: rgba(255,255,255,0.06); }
+
+    .note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid;
+      font-size: 13px;
+      line-height: 1.7;
+      display: none;
+    }
+
+    .status.show { display: block; }
+    .status.ok { border-color: rgba(70,208,140,0.45); color: var(--ok); }
+    .status.warn { border-color: rgba(255,191,102,0.45); color: var(--warn); }
+
+    .timeline {
+      margin-top: 8px;
+      border-left: 1px solid rgba(0,217,255,0.3);
+      padding-left: 14px;
+    }
+
+    .timeline p {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.01);
+      margin: 8px 0 12px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 13px;
+      white-space: pre-line;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="card">
+      <div class="step active" id="step0">
+        <span class="tag">YOU ARE INVITED</span>
+        <h1><span class="highlight">湿热空气</span>里的声音与影像</h1>
+        <p class="lead">
+          这是一份活动邀请。首页只保留意境和必要信息。
+          如果你愿意继续，我们会请你完成一份简短问卷，用于确认匹配度与到场安排。
+        </p>
 
-<div class="mist-layer"></div>
-<div class="droplets"></div>
-<div class="wet-stain"></div>
+        <div class="timeline">
+          <p>09:00 - 10:00 入场与氛围启动</p>
+          <p>11:00 - 13:00 影像时段</p>
+          <p>14:00 - 17:00 音乐主场</p>
+        </div>
 
-<div class="container">
+        <div class="actions">
+          <button class="btn btn-primary" id="toStep1">愿意，继续</button>
+          <button class="btn btn-secondary" id="leaveNow">这次先不了</button>
+        </div>
 
-  <!-- ========== 敬请期待 ========== -->
-  <div class="coming-soon" id="comingSoon">
-    <h1>敬请期待</h1>
-    <p>SOMETHING IS COMING</p>
-    <div class="bar"></div>
+        <div class="status warn" id="leaveMsg">已记录你本次暂不参加。后续活动可再次联系。</div>
+      </div>
+
+      <div class="step" id="step1">
+        <div class="section-title">第一轮问卷</div>
+        <p class="lead">以下题目可由林枫后续替换具体内容。当前先保留结构。</p>
+
+        <div class="field">
+          <label class="label">问题 1（内容占位，待填）</label>
+          <input id="q1" type="text" placeholder="这里留给林枫填写具体问题" />
+        </div>
+
+        <div class="field">
+          <label class="label">问题 2（内容占位，待填）</label>
+          <input id="q2" type="text" placeholder="这里留给林枫填写具体问题" />
+        </div>
+
+        <div class="field">
+          <label class="label">问题 3（内容占位，待填）</label>
+          <textarea id="q3" placeholder="这里留给林枫填写开放题"></textarea>
+        </div>
+
+        <div class="field">
+          <label class="label">你当前的参加意向</label>
+          <div class="options" id="attendanceGroup">
+            <label class="opt"><input type="radio" name="attendance" value="确定参加" />
+              <span>确定参加<small>已基本确认到场</small></span>
+            </label>
+            <label class="opt"><input type="radio" name="attendance" value="可能参加_请活动前几天再联系" />
+              <span>可能参加<small>暂未完全确认，请活动前几天再次联系我</small></span>
+            </label>
+            <label class="opt"><input type="radio" name="attendance" value="本次不参加" />
+              <span>本次不参加<small>保留后续活动邀约</small></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">同行规则</label>
+          <div class="options" id="companionGroup">
+            <label class="opt"><input type="radio" name="companion" value="单人" />
+              <span>单人参加<small>每次邀请默认仅限 1 人</small></span>
+            </label>
+            <label class="opt"><input type="radio" name="companion" value="伴侣同行" />
+              <span>伴侣同行<small>仅伴侣可作为例外；伴侣也需单独填写问卷</small></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field" id="partnerInfoField" style="display:none;">
+          <label class="label">伴侣信息（便于后续核对）</label>
+          <input id="partnerInfo" type="text" placeholder="伴侣姓名或称呼" />
+        </div>
+
+        <div class="field">
+          <label class="opt">
+            <input id="ruleConfirm" type="checkbox" />
+            <span>我已理解：邀请默认单人，伴侣除外；若同行，伴侣需再填一份问卷。</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" id="back0">返回首页</button>
+          <button class="btn btn-primary" id="toStep2">进入二次确认</button>
+        </div>
+
+        <div class="status warn" id="step1Warn">请先完成关键选择，再进入下一步。</div>
+      </div>
+
+      <div class="step" id="step2">
+        <div class="section-title">二次确认</div>
+        <p class="lead">请基于你与本场活动气质的匹配，再确认一次是否继续。</p>
+        <div class="summary" id="summaryBox"></div>
+
+        <div class="options">
+          <label class="opt"><input type="radio" name="reconfirm" value="仍愿意继续" />
+            <span>我仍愿意继续</span>
+          </label>
+          <label class="opt"><input type="radio" name="reconfirm" value="暂不继续" />
+            <span>我决定暂不继续</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" id="back1">返回修改问卷</button>
+          <button class="btn btn-primary" id="toStep3">进入最终信息提交</button>
+        </div>
+
+        <div class="status warn" id="step2Warn">请选择二次确认结果。</div>
+      </div>
+
+      <div class="step" id="step3">
+        <div class="section-title">最终信息提交</div>
+        <p class="lead">完成提交后，主理人可做统一统计与后续触达。</p>
+
+        <form id="finalForm" action="https://formsubmit.co/1354057041@qq.com" method="POST">
+          <input type="hidden" name="_subject" value="活动邀约确认统计" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="q1_answer" id="h_q1" />
+          <input type="hidden" name="q2_answer" id="h_q2" />
+          <input type="hidden" name="q3_answer" id="h_q3" />
+          <input type="hidden" name="attendance_choice" id="h_attendance" />
+          <input type="hidden" name="companion_choice" id="h_companion" />
+          <input type="hidden" name="partner_info" id="h_partner" />
+          <input type="hidden" name="reconfirm_result" id="h_reconfirm" />
+
+          <div class="field">
+            <label class="label">姓名 / 昵称</label>
+            <input name="guest_name" type="text" required />
+          </div>
+          <div class="field">
+            <label class="label">联系方式（微信或手机）</label>
+            <input name="contact" type="text" required />
+          </div>
+          <div class="field">
+            <label class="label">补充备注（选填）</label>
+            <textarea name="note"></textarea>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-secondary" type="button" id="back2">返回二次确认</button>
+            <button class="btn btn-primary" type="submit" id="submitBtn">提交</button>
+          </div>
+        </form>
+
+        <div class="status ok" id="submitOk">已提交。我们会按你选择的状态进行后续联系。</div>
+        <div class="status warn" id="submitFail">提交失败，请稍后重试。</div>
+      </div>
+    </div>
   </div>
 
-  <!-- ========== 邀请函模式 ========== -->
-  <div class="invite-mode" id="inviteMode">
+  <script>
+    const state = {
+      attendance: '',
+      companion: '',
+      reconfirm: ''
+    };
 
-    <div class="header">
-      <div class="tag">YOU ARE INVITED</div>
-      <h1>
-        <span class="highlight">朋克</span> × 回南天<br>
-        全天 EVENT
-      </h1>
-      <div class="date">2026.04.18 SATURDAY</div>
-      <div class="desc">
-        当朋克的躁动遇上回南天的潮湿，<br>
-        一场关于声音、影像与潮湿空气的全天沉浸。
-      </div>
-    </div>
+    const steps = ['step0', 'step1', 'step2', 'step3'];
 
-    <div class="choice-section">
-      <div class="question">你愿意加入吗？</div>
-      <div class="btn-group">
-        <button class="btn btn-yes" id="btnYes" onclick="choose(true)">愿意</button>
-        <button class="btn btn-no" id="btnNo" onclick="choose(false)">这次不了</button>
-      </div>
-    </div>
+    function showStep(id) {
+      steps.forEach(s => document.getElementById(s).classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-    <!-- 拒绝 -->
-    <div class="reject-msg" id="rejectMsg">
-      <p>没关系，下次见 🤘</p>
-    </div>
+    function hideStatus(id) {
+      document.getElementById(id).classList.remove('show');
+    }
 
-    <!-- 时间线 -->
-    <div class="timeline" id="timeline">
-      <div class="tl-item">
-        <div class="tl-time">09:00 — 10:00</div>
-        <div class="tl-title">入场 & 氛围启动</div>
-        <div class="tl-desc">到达、熟悉空间、喝点东西进入状态</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">11:00 — 13:00</div>
-        <div class="tl-title">影像时段</div>
-        <div class="tl-desc">集体观看精选影片，沉浸式体验</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">13:00 — 14:00</div>
-        <div class="tl-title">休憩 · 冥想</div>
-        <div class="tl-desc">放空、休息、充电，为下午蓄力</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">14:00 — 17:00</div>
-        <div class="tl-title">AFTER PARTY</div>
-        <div class="tl-desc">音乐主场，酒精辅助，氛围拉满</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">17:00</div>
-        <div class="tl-title">补给站</div>
-        <div class="tl-desc">提供简单食物，补充能量，继续躁</div>
-      </div>
-    </div>
+    function showStatus(id) {
+      document.getElementById(id).classList.add('show');
+    }
 
-    <!-- 规则 -->
-    <div class="rules" id="rules">
-      <h3>GROUND RULES</h3>
-      <ul>
-        <li>特定时段可能收手机，全身心投入</li>
-        <!-- 在这里添加更多规则，格式：<li>规则内容</li> -->
-      </ul>
-    </div>
+    function selectedValue(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : '';
+    }
 
-    <!-- 登记表单 -->
-    <div class="rsvp-section" id="rsvpSection">
-      <h3>确认参加</h3>
-      <p class="rsvp-hint">留下你的信息，我们好准备位置给你</p>
-      <form action="https://formsubmit.co/1354057041@qq.com" method="POST" id="rsvpForm">
-        <input type="hidden" name="_subject" value="🔔 活动报名确认 - 朋克×回南天 4.18">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="javascript:void(0)">
-        <div class="form-group">
-          <input type="text" name="name" placeholder="你的名字 / 昵称" required>
-        </div>
-        <div class="form-group">
-          <select name="attendance" required>
-            <option value="" disabled selected>你确定来吗？</option>
-            <option value="确定参加 ✅">确定参加 ✅</option>
-            <option value="可能参加 🤔">可能参加 🤔</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <input type="text" name="note" placeholder="有什么想说的？（选填）">
-        </div>
-        <button type="submit" class="btn-submit" id="submitBtn">提交确认 🤘</button>
-      </form>
-      <div class="submit-success" id="submitSuccess">
-        <p>已收到！4.18 见 🖤</p>
-      </div>
-    </div>
+    function buildSummary() {
+      const q1 = document.getElementById('q1').value || '(未填写)';
+      const q2 = document.getElementById('q2').value || '(未填写)';
+      const q3 = document.getElementById('q3').value || '(未填写)';
+      const partnerInfo = document.getElementById('partnerInfo').value || '(未填写)';
 
-    <div class="footer" id="footer">
-      <p>SEE YOU IN THE HUMID 🖤</p>
-    </div>
+      const summary = [
+        `第一轮问卷摘要`,
+        `问题1回答: ${q1}`,
+        `问题2回答: ${q2}`,
+        `问题3回答: ${q3}`,
+        `参加意向: ${state.attendance}`,
+        `同行规则: ${state.companion}${state.companion === '伴侣同行' ? ` / 伴侣信息: ${partnerInfo}` : ''}`
+      ].join('\n');
 
-  </div>
+      document.getElementById('summaryBox').textContent = summary;
+    }
 
-</div>
+    function syncHiddenFields() {
+      document.getElementById('h_q1').value = document.getElementById('q1').value || '';
+      document.getElementById('h_q2').value = document.getElementById('q2').value || '';
+      document.getElementById('h_q3').value = document.getElementById('q3').value || '';
+      document.getElementById('h_attendance').value = state.attendance || '';
+      document.getElementById('h_companion').value = state.companion || '';
+      document.getElementById('h_partner').value = document.getElementById('partnerInfo').value || '';
+      document.getElementById('h_reconfirm').value = state.reconfirm || '';
+    }
 
-<script>
-// ============================================
-// 开关：true = 邀请函模式，false = 敬请期待
-// ============================================
-const EVENT_ACTIVE = true;
-
-// ============================================
-// 初始化
-// ============================================
-function init() {
-  if (EVENT_ACTIVE) {
-    document.getElementById('comingSoon').classList.add('hidden');
-    document.getElementById('inviteMode').classList.add('active');
-  }
-}
-
-// 选择
-function choose(willing) {
-  document.getElementById('btnYes').classList.remove('active');
-  document.getElementById('btnNo').classList.remove('active');
-
-  if (willing) {
-    document.getElementById('btnYes').classList.add('active');
-    document.getElementById('rejectMsg').classList.remove('show');
-    document.getElementById('timeline').classList.add('show');
-    document.getElementById('rules').classList.add('show');
-    document.getElementById('rsvpSection').classList.add('show');
-    document.getElementById('footer').classList.add('show');
-  } else {
-    document.getElementById('btnNo').classList.add('active');
-    document.getElementById('timeline').classList.remove('show');
-    document.getElementById('rules').classList.remove('show');
-    document.getElementById('rsvpSection').classList.remove('show');
-    document.getElementById('footer').classList.remove('show');
-    document.getElementById('rejectMsg').classList.add('show');
-  }
-}
-
-// 表单提交（AJAX，不跳转）
-document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  btn.textContent = '提交中...';
-  btn.disabled = true;
-
-  try {
-    const formData = new FormData(this);
-    await fetch(this.action, {
-      method: 'POST',
-      body: formData
+    document.getElementById('toStep1').addEventListener('click', () => {
+      hideStatus('leaveMsg');
+      showStep('step1');
     });
-    document.getElementById('rsvpForm').style.display = 'none';
-    document.getElementById('submitSuccess').classList.add('show');
-  } catch(err) {
-    btn.textContent = '提交失败，请重试';
-    btn.disabled = false;
-  }
-});
 
-init();
-</script>
+    document.getElementById('leaveNow').addEventListener('click', () => {
+      showStatus('leaveMsg');
+    });
 
+    document.getElementById('back0').addEventListener('click', () => {
+      hideStatus('step1Warn');
+      showStep('step0');
+    });
+
+    document.querySelectorAll('input[name="companion"]').forEach(r => {
+      r.addEventListener('change', (e) => {
+        const show = e.target.value === '伴侣同行';
+        document.getElementById('partnerInfoField').style.display = show ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById('toStep2').addEventListener('click', () => {
+      hideStatus('step1Warn');
+
+      state.attendance = selectedValue('attendance');
+      state.companion = selectedValue('companion');
+      const ruleOk = document.getElementById('ruleConfirm').checked;
+
+      if (!state.attendance || !state.companion || !ruleOk) {
+        showStatus('step1Warn');
+        return;
+      }
+
+      buildSummary();
+      showStep('step2');
+    });
+
+    document.getElementById('back1').addEventListener('click', () => {
+      hideStatus('step2Warn');
+      showStep('step1');
+    });
+
+    document.getElementById('toStep3').addEventListener('click', () => {
+      hideStatus('step2Warn');
+      state.reconfirm = selectedValue('reconfirm');
+
+      if (!state.reconfirm) {
+        showStatus('step2Warn');
+        return;
+      }
+
+      if (state.reconfirm === '暂不继续') {
+        showStatus('step2Warn');
+        document.getElementById('step2Warn').textContent = '已记录你暂不继续，本次流程到此。';
+        return;
+      }
+
+      syncHiddenFields();
+      showStep('step3');
+    });
+
+    document.getElementById('back2').addEventListener('click', () => {
+      hideStatus('submitOk');
+      hideStatus('submitFail');
+      showStep('step2');
+    });
+
+    document.getElementById('finalForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      hideStatus('submitOk');
+      hideStatus('submitFail');
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '提交中';
+
+      try {
+        const formData = new FormData(this);
+        const res = await fetch(this.action, { method: 'POST', body: formData });
+        if (!res.ok) throw new Error('network');
+        showStatus('submitOk');
+        this.style.display = 'none';
+      } catch (err) {
+        showStatus('submitFail');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '提交';
+      }
+    });
+  </script>
 </body>
 </html>
