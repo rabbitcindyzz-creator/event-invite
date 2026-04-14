@@ -501,16 +501,10 @@
     document.querySelectorAll('label.opt').forEach(label => {
       label.addEventListener('click', function(e) {
         const radio = this.querySelector('input[type="radio"]');
-        const checkbox = this.querySelector('input[type="checkbox"]');
-
         if (radio && e.target !== radio) {
           e.preventDefault();
           radio.checked = true;
           radio.dispatchEvent(new Event('change', { bubbles: true }));
-        } else if (checkbox && e.target !== checkbox) {
-          e.preventDefault();
-          checkbox.checked = !checkbox.checked;
-          checkbox.dispatchEvent(new Event('change', { bubbles: true }));
         }
       });
     });
