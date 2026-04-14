@@ -338,8 +338,8 @@
       </div>
 
       <div class="step" id="step1">
-        <div class="section-title">第一轮问卷</div>
-        <p class="lead">以下题目可由林枫后续替换具体内容。当前先保留结构。</p>
+        <div class="section-title">简短问卷</div>
+        <p class="lead">以下题目为占位，后续可替换为本场活动的真实筛选问题。</p>
 
         <div class="field">
           <label class="label">问题 1（内容占位，待填）</label>
@@ -362,8 +362,8 @@
             <label class="opt"><input type="radio" name="attendance" value="确定参加" />
               <span>确定参加<small>已基本确认到场</small></span>
             </label>
-            <label class="opt"><input type="radio" name="attendance" value="可能参加_请活动前几天再联系" />
-              <span>可能参加<small>暂未完全确认，请活动前几天再次联系我</small></span>
+            <label class="opt"><input type="radio" name="attendance" value="可能参加（活动前几天请再联系我）" />
+              <span>可能参加<small>暂未完全确认，活动前几天请再联系我</small></span>
             </label>
             <label class="opt"><input type="radio" name="attendance" value="本次不参加" />
               <span>本次不参加<small>保留后续活动邀约</small></span>
@@ -381,7 +381,7 @@
 
       <div class="step" id="step2">
         <div class="section-title">二次确认</div>
-        <p class="lead">请基于你与本场活动气质的匹配，再确认一次是否继续。</p>
+        <p class="lead">请基于你与本场活动气质的匹配，再确认一次是否继续。若你与朋友同来，请确保对方也单独填写一份问卷。</p>
         <div class="summary" id="summaryBox"></div>
 
         <div class="options">
@@ -561,11 +561,15 @@
 
     document.getElementById('back1').addEventListener('click', () => {
       hideStatus('step2Warn');
+      document.getElementById('step2Warn').textContent = step2WarnDefault;
       showStep('step1');
     });
 
+    const step2WarnDefault = '请选择二次确认结果。';
+
     document.getElementById('toStep3').addEventListener('click', () => {
       hideStatus('step2Warn');
+      document.getElementById('step2Warn').textContent = step2WarnDefault;
       state.reconfirm = selectedValue('reconfirm');
 
       if (!state.reconfirm) {
