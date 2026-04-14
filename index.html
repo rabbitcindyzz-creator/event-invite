@@ -339,21 +339,31 @@
 
       <div class="step" id="step1">
         <div class="section-title">简短问卷</div>
-        <p class="lead">以下题目为占位，后续可替换为本场活动的真实筛选问题。</p>
+        <p class="lead">三道题，30 秒读完，1 分钟填完。</p>
 
         <div class="field">
-          <label class="label">问题 1（内容占位，待填）</label>
-          <input id="q1" type="text" placeholder="这里留给林枫填写具体问题" />
+          <label class="label">今晚会有实验影像和现场行为艺术，有些内容可能超出你的日常审美边界。面对陌生的艺术形式，你通常会？</label>
+          <div class="options" id="openMindGroup">
+            <label class="opt"><input type="radio" name="q1_openmind" value="放松接受，不预设期待" />
+              <span>放松接受，不预设期待</span>
+            </label>
+            <label class="opt"><input type="radio" name="q1_openmind" value="先观察，再慢慢进入" />
+              <span>先观察，再慢慢进入</span>
+            </label>
+            <label class="opt"><input type="radio" name="q1_openmind" value="更喜欢熟悉的风格" />
+              <span>更喜欢熟悉的风格</span>
+            </label>
+          </div>
         </div>
 
         <div class="field">
-          <label class="label">问题 2（内容占位，待填）</label>
-          <input id="q2" type="text" placeholder="这里留给林枫填写具体问题" />
+          <label class="label">这场活动有朋克和回南天的调性——潮湿、躁动、暧昧。你觉得自己身上最接近这种气质的是？</label>
+          <textarea id="q2" placeholder="一句话描述"></textarea>
         </div>
 
         <div class="field">
-          <label class="label">问题 3（内容占位，待填）</label>
-          <textarea id="q3" placeholder="这里留给林枫填写开放题"></textarea>
+          <label class="label">本场会有限量主题饮品和特别餐食，需要用筹码兑换。如果你来，你最想喝到什么样的味道？</label>
+          <textarea id="q3" placeholder="一句话描述"></textarea>
         </div>
 
         <div class="field">
@@ -467,7 +477,7 @@
     }
 
     function buildSummary() {
-      const q1 = document.getElementById('q1').value || '(未填写)';
+      const q1 = (document.querySelector('input[name="q1_openmind"]:checked') || {}).value || '(未选择)';
       const q2 = document.getElementById('q2').value || '(未填写)';
       const q3 = document.getElementById('q3').value || '(未填写)';
       const partnerInfo = document.getElementById('partnerInfo0').value || '(未填写)';
@@ -485,7 +495,7 @@
     }
 
     function syncHiddenFields() {
-      document.getElementById('h_q1').value = document.getElementById('q1').value || '';
+      document.getElementById('h_q1').value = (document.querySelector('input[name="q1_openmind"]:checked') || {}).value || '';
       document.getElementById('h_q2').value = document.getElementById('q2').value || '';
       document.getElementById('h_q3').value = document.getElementById('q3').value || '';
       document.getElementById('h_attendance').value = state.attendance || '';
