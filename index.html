@@ -527,13 +527,7 @@
 
     document.getElementById('toStep1').addEventListener('click', () => {
       hideStatus('step0Warn');
-
       state.companion = selectedValue('companion0') || '单人';
-
-      if (!state.companion) {
-        showStatus('step0Warn');
-        return;
-      }
       showStep('step1');
     });
 
