@@ -576,25 +576,14 @@
       const name = document.getElementById('leaveName').value.trim();
       const contact = document.getElementById('leaveContact').value.trim();
       if (!name || !contact) return;
-      const params = new URLSearchParams({
-        _subject: '活动邀约 — 暂不参加记录',
-        guest_name: name,
-        contact: contact,
-        attendance_choice: '本次不参加（首屏直接退出）',
-        _captcha: 'false',
-        _template: 'table'
-      });
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://formsubmit.co/feng.punkzen@gmail.com';
-      for (const [k, v] of params) {
-        const input = document.createElement('input');
-        input.type = 'hidden'; input.name = k; input.value = v;
-        form.appendChild(input);
-      }
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      const formData = new FormData();
+      formData.append('_subject', '活动邀约 — 暂不参加记录');
+      formData.append('_captcha', 'false');
+      formData.append('_template', 'table');
+      formData.append('guest_name', name);
+      formData.append('contact', contact);
+      formData.append('attendance_choice', '本次不参加（首屏直接退出）');
+      fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
       document.getElementById('leaveMsg').innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">已记录，期待下次与你相见。</p>';
     });
 
