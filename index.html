@@ -327,13 +327,6 @@
           </div>
         </div>
 
-        <div class="status" id="leaveOk" style="display:none;">
-          <div class="confirm-card">
-            <p class="confirm-name" id="leaveConfirmName"></p>
-            <p class="confirm-line">期待下次与你相见。</p>
-          </div>
-        </div>
-
         <div id="companionSection" style="display:none;">
           <div class="divider"></div>
           <div class="field">
@@ -501,6 +494,13 @@
         </div>
         <div class="status warn" id="submitFail">提交失败，请稍后重试。</div>
       </div>
+
+      <div class="step" id="stepLeave">
+        <div class="confirm-card">
+          <p class="confirm-name" id="leaveConfirmName"></p>
+          <p class="confirm-line">期待下次与你相见。</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -511,7 +511,7 @@
       reconfirm: ''
     };
 
-    const steps = ['step0', 'step1', 'step2', 'step3'];
+    const steps = ['step0', 'step1', 'step2', 'step3', 'stepLeave'];
 
     function showStep(id) {
       steps.forEach(s => document.getElementById(s).classList.remove('active'));
@@ -618,10 +618,8 @@
       document.body.appendChild(form);
       form.submit();
       document.body.removeChild(form);
-      const guestName = name;
-      document.getElementById('leaveConfirmName').textContent = guestName + '，';
-      document.getElementById('leaveMsg').style.display = 'none';
-      document.getElementById('leaveOk').style.display = 'block';
+      document.getElementById('leaveConfirmName').textContent = name + '，';
+      showStep('stepLeave');
     });
 
     document.querySelectorAll('input[name="companion0"]').forEach(r => {
