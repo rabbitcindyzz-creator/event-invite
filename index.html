@@ -421,7 +421,6 @@
           <div class="field">
             <input id="maybePhone" type="text" placeholder="微信号或手机" />
           </div>
-          <button class="btn btn-primary" id="maybeSubmit">确认提交</button>
         </div>
 
         <div class="actions">
@@ -631,21 +630,6 @@
       });
     });
 
-    document.getElementById('maybeSubmit').addEventListener('click', () => {
-      const name = document.getElementById('maybeName').value.trim();
-      const phone = document.getElementById('maybePhone').value.trim();
-      if (!name || !phone) return;
-      const formData = new FormData();
-      formData.append('_subject', '活动邀约 — 可能参加记录');
-      formData.append('_captcha', 'false');
-      formData.append('_template', 'table');
-      formData.append('guest_name', name);
-      formData.append('contact', phone);
-      formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
-      fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
-      document.getElementById('maybeContact').innerHTML = '<p style="font-size:15px;line-height:2;color:var(--accent-a);">期待与你联系。</p>';
-    });
-
     document.getElementById('toStep2').addEventListener('click', () => {
       hideStatus('step1Warn');
 
@@ -661,6 +645,27 @@
         document.getElementById('companionSection').style.display = 'none';
         showStep('step0');
         showStatus('leaveMsg');
+        return;
+      }
+
+      if (state.attendance === '可能参加（活动前几天请再联系我）') {
+        const name = document.getElementById('maybeName').value.trim();
+        const phone = document.getElementById('maybePhone').value.trim();
+        if (!name || !phone) {
+          showStatus('step1Warn');
+          document.getElementById('step1Warn').textContent = '请先填写联系方式。';
+          return;
+        }
+        const formData = new FormData();
+        formData.append('_subject', '活动邀约 — 可能参加记录');
+        formData.append('_captcha', 'false');
+        formData.append('_template', 'table');
+        formData.append('guest_name', name);
+        formData.append('contact', phone);
+        formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
+        fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
+        document.getElementById('maybeContact').innerHTML = '<p style="font-size:15px;line-height:2;color:var(--accent-a);">期待与你联系。</p>';
+        document.getElementById('toStep2').style.display = 'none';
         return;
       }
 
