@@ -508,7 +508,8 @@
     const state = {
       attendance: '',
       companion: '',
-      reconfirm: ''
+      reconfirm: '',
+      visitedQuestionnaire: false
     };
 
     const steps = ['step0', 'step1', 'step2', 'step3', 'stepLeave'];
@@ -608,7 +609,9 @@
         '_subject': '活动邀约 — 暂不参加记录',
         'guest_name': name,
         'contact': contact,
-        'attendance_choice': '本次不参加（首屏直接退出）'
+        'attendance_choice': state.visitedQuestionnaire
+          ? '本次不参加（已完成问卷后退出）'
+          : '本次不参加（首页直接退出）'
       };
       for (const [k, v] of Object.entries(fields)) {
         const input = document.createElement('input');
@@ -637,6 +640,7 @@
         return;
       }
       state.companion = selectedValue('companion0') || '单人';
+      state.visitedQuestionnaire = true;
       showStep('step1');
     });
 
