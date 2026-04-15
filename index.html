@@ -314,18 +314,8 @@
           <button class="btn-hero btn-hero-default" id="leaveNow">这次先不了</button>
         </div>
 
-        <div class="status warn" id="leaveMsg">
-          <p style="margin-bottom:12px;">已记录你本次暂不参加。后续活动可再次联系，请按 👉</p>
-          <div class="field">
-            <label class="label">Your Name</label>
-            <input id="leaveName" type="text" placeholder="你的姓名或昵称" />
-          </div>
-          <div class="field">
-            <label class="label">Your Contact Code</label>
-            <input id="leaveContact" type="text" placeholder="微信号或手机" />
-          </div>
-          <button class="btn btn-primary" id="leaveSubmit">提交</button>
-          <div class="status ok" id="leaveOk">已记录，后续活动可再次联系你。</div>
+        <div class="status ok" id="leaveMsg">
+          <p style="font-size:16px;line-height:2;color:var(--accent-a);">期待下次与你相见。</p>
         </div>
 
         <div id="companionSection" style="display:none;">
@@ -570,39 +560,6 @@
     document.getElementById('leaveNow').addEventListener('click', () => {
       setActiveHero(document.getElementById('leaveNow'));
       document.getElementById('companionSection').style.display = 'none';
-      showStatus('leaveMsg');
-    });
-
-    document.getElementById('leaveSubmit').addEventListener('click', () => {
-      const name = document.getElementById('leaveName').value.trim();
-      const contact = document.getElementById('leaveContact').value.trim();
-      if (!name || !contact) return;
-      // Open Formsubmit with leave data
-      const params = new URLSearchParams({
-        _subject: '活动邀约 — 暂不参加记录',
-        guest_name: name,
-        contact: contact,
-        attendance_choice: '本次不参加（首屏直接退出）',
-        _captcha: 'false',
-        _template: 'table'
-      });
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://formsubmit.co/feng.punkzen@gmail.com';
-      for (const [k, v] of params) {
-        const input = document.createElement('input');
-        input.type = 'hidden'; input.name = k; input.value = v;
-        form.appendChild(input);
-      }
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-      // 提交后显示希望下次见
-      hideStatus('leaveMsg');
-      const farewell = document.getElementById('leaveMsg');
-      farewell.innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">期待下次与你相见。</p>';
-      farewell.classList.remove('warn');
-      farewell.classList.add('ok');
       showStatus('leaveMsg');
     });
 
