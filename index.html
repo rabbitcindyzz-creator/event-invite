@@ -457,7 +457,7 @@
         <div class="section-title">最终信息提交</div>
         <p class="lead"></p>
 
-        <form id="finalForm" action="https://formsubmit.co/feng.punkzen@gmail.com" method="POST">
+        <form id="finalForm" action="https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com" method="POST">
           <input type="hidden" name="_subject" value="活动邀约确认统计" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
@@ -594,7 +594,7 @@
       formData.append('guest_name', name);
       formData.append('contact', contact);
       formData.append('attendance_choice', '本次不参加（首屏直接退出）');
-      fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
+      fetch('https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com', { method: 'POST', body: formData });
       document.getElementById('leaveMsg').innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">已记录，期待下次与你相见。</p>';
     });
 
@@ -663,7 +663,7 @@
         formData.append('guest_name', name);
         formData.append('contact', phone);
         formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
-        fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
+        fetch('https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com', { method: 'POST', body: formData });
         document.getElementById('maybeContact').innerHTML = '<p style="font-size:15px;line-height:2;color:var(--accent-a);">期待与你联系。</p>';
         document.getElementById('toStep2').style.display = 'none';
         return;
