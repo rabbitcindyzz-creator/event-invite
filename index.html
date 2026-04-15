@@ -591,14 +591,30 @@
       const name = document.getElementById('leaveName').value.trim();
       const contact = document.getElementById('leaveContact').value.trim();
       if (!name || !contact) return;
-      const formData = new FormData();
-      formData.append('_subject', '活动邀约 — 暂不参加记录');
-      formData.append('_captcha', 'false');
-      formData.append('_template', 'table');
-      formData.append('guest_name', name);
-      formData.append('contact', contact);
-      formData.append('attendance_choice', '本次不参加（首屏直接退出）');
-      fetch('https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com', { method: 'POST', body: formData });
+      const iframe = document.createElement('iframe');
+      iframe.name = 'leaveFrame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com';
+      form.target = 'leaveFrame';
+      const fields = {
+        '_subject': '活动邀约 — 暂不参加记录',
+        '_captcha': 'false',
+        '_template': 'table',
+        'guest_name': name,
+        'contact': contact,
+        'attendance_choice': '本次不参加（首屏直接退出）'
+      };
+      for (const [k, v] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden'; input.name = k; input.value = v;
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
       document.getElementById('leaveMsg').innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">已记录，期待下次与你相见。</p>';
     });
 
@@ -660,14 +676,30 @@
           document.getElementById('step1Warn').textContent = '请先填写联系方式。';
           return;
         }
-        const formData = new FormData();
-        formData.append('_subject', '活动邀约 — 可能参加记录');
-        formData.append('_captcha', 'false');
-        formData.append('_template', 'table');
-        formData.append('guest_name', name);
-        formData.append('contact', phone);
-        formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
-        fetch('https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com', { method: 'POST', body: formData });
+        const iframe = document.createElement('iframe');
+        iframe.name = 'maybeFrame';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com';
+        form.target = 'maybeFrame';
+        const fields = {
+          '_subject': '活动邀约 — 可能参加记录',
+          '_captcha': 'false',
+          '_template': 'table',
+          'guest_name': name,
+          'contact': phone,
+          'attendance_choice': '可能参加（活动前几天请再联系我）'
+        };
+        for (const [k, v] of Object.entries(fields)) {
+          const input = document.createElement('input');
+          input.type = 'hidden'; input.name = k; input.value = v;
+          form.appendChild(input);
+        }
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
         // 隐藏所有内容，显示确认页
         const step1 = document.getElementById('step1');
         step1.querySelectorAll('.field, .options, .actions, .divider, .label').forEach(el => el.style.display = 'none');
