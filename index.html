@@ -457,10 +457,8 @@
         <div class="section-title">最终信息提交</div>
         <p class="lead"></p>
 
-        <form id="finalForm" action="https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com" method="POST">
+        <form id="finalForm" action="https://formspree.io/f/xaqaqweg" method="POST">
           <input type="hidden" name="_subject" value="活动邀约确认统计" />
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="q1_answer" id="h_q1" />
           <input type="hidden" name="q2_answer" id="h_q2" />
           <input type="hidden" name="q3_answer" id="h_q3" />
@@ -597,12 +595,10 @@
       document.body.appendChild(iframe);
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = 'https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com';
+      form.action = 'https://formspree.io/f/xaqaqweg';
       form.target = 'leaveFrame';
       const fields = {
         '_subject': '活动邀约 — 暂不参加记录',
-        '_captcha': 'false',
-        '_template': 'table',
         'guest_name': name,
         'contact': contact,
         'attendance_choice': '本次不参加（首屏直接退出）'
@@ -682,12 +678,10 @@
         document.body.appendChild(iframe);
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = 'https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com';
+        form.action = 'https://formspree.io/f/xaqaqweg';
         form.target = 'maybeFrame';
         const fields = {
           '_subject': '活动邀约 — 可能参加记录',
-          '_captcha': 'false',
-          '_template': 'table',
           'guest_name': name,
           'contact': phone,
           'attendance_choice': '可能参加（活动前几天请再联系我）'
