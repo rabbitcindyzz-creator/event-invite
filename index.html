@@ -664,8 +664,16 @@
         formData.append('contact', phone);
         formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
         fetch('https://formsubmit.co/feng.punkzen@gmail.com,1354057041@qq.com', { method: 'POST', body: formData });
-        document.getElementById('maybeContact').innerHTML = '<p style="font-size:15px;line-height:2;color:var(--accent-a);">期待与你联系。</p>';
-        document.getElementById('toStep2').style.display = 'none';
+        // 隐藏所有内容，显示确认页
+        const step1 = document.getElementById('step1');
+        step1.querySelectorAll('.field, .options, .actions, .divider, .label').forEach(el => el.style.display = 'none');
+        step1.querySelector('.section-title').style.display = 'none';
+        step1.querySelector('.lead').style.display = 'none';
+        hideStatus('step1Warn');
+        const confirm = document.createElement('div');
+        confirm.className = 'status show';
+        confirm.innerHTML = '<div class="confirm-card"><p class="confirm-name">' + name + '，</p><p class="confirm-line">期待与你联系。</p></div>';
+        step1.appendChild(confirm);
         return;
       }
 
