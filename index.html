@@ -747,7 +747,7 @@
       showStep('step2');
     });
 
-    document.getElementById('finalForm').addEventListener('submit', async function (e) {
+    document.getElementById('finalForm').addEventListener('submit', function (e) {
       e.preventDefault();
       hideStatus('submitOk');
       hideStatus('submitFail');
@@ -756,19 +756,19 @@
       submitBtn.disabled = true;
       submitBtn.textContent = '提交中';
 
-      try {
-        const formData = new FormData(this);
-        const res = await fetch(this.action, { method: 'POST', body: formData });
-        if (!res.ok) throw new Error('network');
-        const guestName = this.querySelector('input[name="guest_name"]').value.trim();
-        document.getElementById('confirmName').textContent = guestName + '，';
-        showStatus('submitOk');
-        this.style.display = 'none';
-      } catch (err) {
-        showStatus('submitFail');
-        submitBtn.disabled = false;
-        submitBtn.textContent = '提交';
-      }
+      const iframe = document.createElement('iframe');
+      iframe.name = 'finalFrame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      this.target = 'finalFrame';
+
+      const guestName = this.querySelector('input[name="guest_name"]').value.trim();
+      document.getElementById('confirmName').textContent = guestName + '，';
+      showStatus('submitOk');
+      this.style.display = 'none';
+
+      this.submit();
     });
   </script>
 </body>
