@@ -327,6 +327,13 @@
           </div>
         </div>
 
+        <div class="status" id="leaveOk" style="display:none;">
+          <div class="confirm-card">
+            <p class="confirm-name" id="leaveConfirmName"></p>
+            <p class="confirm-line">期待下次与你相见。</p>
+          </div>
+        </div>
+
         <div id="companionSection" style="display:none;">
           <div class="divider"></div>
           <div class="field">
@@ -611,7 +618,10 @@
       document.body.appendChild(form);
       form.submit();
       document.body.removeChild(form);
-      document.getElementById('leaveMsg').innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">已记录，期待下次与你相见。</p>';
+      const guestName = name;
+      document.getElementById('leaveConfirmName').textContent = guestName + '，';
+      document.getElementById('leaveMsg').style.display = 'none';
+      document.getElementById('leaveOk').style.display = 'block';
     });
 
     document.querySelectorAll('input[name="companion0"]').forEach(r => {
