@@ -218,18 +218,18 @@
       transition: background 0.2s, box-shadow 0.2s;
     }
 
-    .btn-accept {
+    .btn-hero-active {
       border-color: var(--accent-a);
       color: var(--accent-a);
       box-shadow: 0 0 20px rgba(184,168,122,0.10);
     }
-    .btn-accept:hover { background: rgba(184, 168, 122, 0.10); }
+    .btn-hero-active:hover { background: rgba(184, 168, 122, 0.10); }
 
-    .btn-decline {
+    .btn-hero-default {
       border-color: #4a443c;
       color: #7a7468;
     }
-    .btn-decline:hover { background: rgba(200,192,178,0.04); }
+    .btn-hero-default:hover { background: rgba(200,192,178,0.04); }
 
     .note {
       margin-top: 10px;
@@ -310,8 +310,8 @@
         </p>
 
         <div class="hero-actions">
-          <button class="btn-hero btn-accept" id="toCompanion">愿意，继续</button>
-          <button class="btn-hero btn-decline" id="leaveNow">这次先不了</button>
+          <button class="btn-hero btn-hero-default" id="toCompanion">愿意，继续</button>
+          <button class="btn-hero btn-hero-default" id="leaveNow">这次先不了</button>
         </div>
 
         <div class="status warn" id="leaveMsg">
@@ -334,10 +334,10 @@
             <label class="label">你打算怎么来？</label>
             <div class="options" id="companionGroup0">
               <label class="opt"><input type="radio" name="companion0" value="单人" checked />
-                <span>单人参加<small>每次邀请默认仅限 1 人</small></span>
+                <span>单人参加<small>每次邀请默认仅限1人，也需单独填写一份问卷</small></span>
               </label>
               <label class="opt"><input type="radio" name="companion0" value="伴侣同行" />
-                <span>伴侣同行<small>仅伴侣可作为例外；伴侣也需单独填写问卷</small></span>
+                <span>伴侣同行<small>仅伴侣可作为例外。</small></span>
               </label>
             </div>
           </div>
@@ -364,7 +364,7 @@
             <p>14:30 接待入场</p>
             <p>15:00 准时观影<small style="color:var(--muted);">（迟到请在下一阶段加入）</small></p>
             <p>~17:00 行为艺术分享</p>
-            <p>18:00 晚间 party</p>
+            <p>18:00 Evening Party</p>
           </div>
         </div>
       </div>
@@ -552,12 +552,24 @@
       });
     });
 
+    // 按钮高亮切换：点击哪个哪个亮
+    const heroBtns = [document.getElementById('toCompanion'), document.getElementById('leaveNow')];
+    function setActiveHero(btn) {
+      heroBtns.forEach(b => b.classList.remove('btn-hero-active'));
+      heroBtns.forEach(b => b.classList.add('btn-hero-default'));
+      btn.classList.remove('btn-hero-default');
+      btn.classList.add('btn-hero-active');
+    }
+
     document.getElementById('toCompanion').addEventListener('click', () => {
+      setActiveHero(document.getElementById('toCompanion'));
       hideStatus('leaveMsg');
       document.getElementById('companionSection').style.display = 'block';
     });
 
     document.getElementById('leaveNow').addEventListener('click', () => {
+      setActiveHero(document.getElementById('leaveNow'));
+      document.getElementById('companionSection').style.display = 'none';
       showStatus('leaveMsg');
     });
 
@@ -585,7 +597,13 @@
       document.body.appendChild(form);
       form.submit();
       document.body.removeChild(form);
-      showStatus('leaveOk');
+      // 提交后显示希望下次见
+      hideStatus('leaveMsg');
+      const farewell = document.getElementById('leaveMsg');
+      farewell.innerHTML = '<p style="font-size:16px;line-height:2;color:var(--accent-a);">期待下次与你相见。</p>';
+      farewell.classList.remove('warn');
+      farewell.classList.add('ok');
+      showStatus('leaveMsg');
     });
 
     document.querySelectorAll('input[name="companion0"]').forEach(r => {
