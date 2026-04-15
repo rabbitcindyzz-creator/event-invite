@@ -636,6 +636,14 @@
         return;
       }
 
+      if (state.attendance === '可能参加（活动前几天请再联系我）') {
+        // 直接进最终提交，跳过二次确认
+        state.companion = selectedValue('companion0') || '单人';
+        syncHiddenFields();
+        showStep('step3');
+        return;
+      }
+
       buildSummary();
       showStep('step2');
     });
