@@ -412,19 +412,6 @@
           </div>
         </div>
 
-        <div id="maybeContact" style="display:none;">
-          <div class="divider"></div>
-          <div class="field">
-            <label class="label">留下联系方式，活动前几天我们会再联系你确认</label>
-            <input id="maybeName" type="text" placeholder="姓名或昵称" />
-          </div>
-          <div class="field">
-            <input id="maybePhone" type="text" placeholder="微信号或手机" />
-          </div>
-          <button class="btn btn-primary" id="maybeSubmit">提交</button>
-          <div class="status ok" id="maybeOk">收到，活动前几天联系你确认。</div>
-        </div>
-
         <div class="actions">
           <button class="btn btn-secondary" id="back0">返回首页</button>
           <button class="btn btn-primary" id="toStep2">进入二次确认</button>
@@ -623,30 +610,12 @@
       showStep('step0');
     });
 
-    // 可能参加时显示联系方式表单
+    // 可能参加时按钮改成"提交"
     document.querySelectorAll('input[name="attendance"]').forEach(r => {
       r.addEventListener('change', (e) => {
-        document.getElementById('maybeContact').style.display =
-          e.target.value === '可能参加（活动前几天请再联系我）' ? 'block' : 'none';
+        document.getElementById('toStep2').textContent =
+          e.target.value === '可能参加（活动前几天请再联系我）' ? '提交' : '进入二次确认';
       });
-    });
-
-    document.getElementById('maybeSubmit').addEventListener('click', () => {
-      const name = document.getElementById('maybeName').value.trim();
-      const phone = document.getElementById('maybePhone').value.trim();
-      if (!name || !phone) return;
-      const formData = new FormData();
-      formData.append('_subject', '活动邀约 — 可能参加记录');
-      formData.append('_captcha', 'false');
-      formData.append('_template', 'table');
-      formData.append('guest_name', name);
-      formData.append('contact', phone);
-      formData.append('attendance_choice', '可能参加（活动前几天请再联系我）');
-      fetch('https://formsubmit.co/feng.punkzen@gmail.com', { method: 'POST', body: formData });
-      hideStatus('maybeOk');
-      document.getElementById('maybeContact').querySelectorAll('input').forEach(i => i.style.display = 'none');
-      document.getElementById('maybeSubmit').style.display = 'none';
-      showStatus('maybeOk');
     });
 
     document.getElementById('toStep2').addEventListener('click', () => {
