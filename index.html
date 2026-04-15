@@ -509,7 +509,7 @@
       attendance: '',
       companion: '',
       reconfirm: '',
-      visitedQuestionnaire: false
+      exitSource: '' // 'homepage' | 'questionnaire' | 'reconfirm'
     };
 
     const steps = ['step0', 'step1', 'step2', 'step3', 'stepLeave'];
@@ -590,6 +590,7 @@
     document.getElementById('leaveNow').addEventListener('click', () => {
       setActiveHero(document.getElementById('leaveNow'));
       document.getElementById('companionSection').style.display = 'none';
+      state.exitSource = 'homepage';
       showStatus('leaveMsg');
     });
 
@@ -609,9 +610,11 @@
         '_subject': '活动邀约 — 暂不参加记录',
         'guest_name': name,
         'contact': contact,
-        'attendance_choice': state.visitedQuestionnaire
-          ? '本次不参加（已完成问卷后退出）'
-          : '本次不参加（首页直接退出）'
+        'attendance_choice': state.exitSource === 'homepage'
+          ? '本次不参加（首页直接退出）'
+          : state.exitSource === 'questionnaire'
+            ? '本次不参加（问卷后退出）'
+            : '本次不参加（最终确认后退出）'
       };
       for (const [k, v] of Object.entries(fields)) {
         const input = document.createElement('input');
@@ -640,7 +643,6 @@
         return;
       }
       state.companion = selectedValue('companion0') || '单人';
-      state.visitedQuestionnaire = true;
       showStep('step1');
     });
 
@@ -671,6 +673,7 @@
       if (state.attendance === '本次不参加') {
         setActiveHero(document.getElementById('leaveNow'));
         document.getElementById('companionSection').style.display = 'none';
+        state.exitSource = 'questionnaire';
         showStep('step0');
         showStatus('leaveMsg');
         return;
@@ -744,6 +747,7 @@
       if (state.reconfirm === '暂不继续') {
         setActiveHero(document.getElementById('leaveNow'));
         document.getElementById('companionSection').style.display = 'none';
+        state.exitSource = 'reconfirm';
         showStep('step0');
         showStatus('leaveMsg');
         return;
