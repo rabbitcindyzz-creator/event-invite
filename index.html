@@ -444,7 +444,7 @@
 
       <div class="step" id="step3">
         <div class="section-title">最终信息提交</div>
-        <p class="lead">完成提交后，主理人可做统一统计与后续触达。</p>
+        <p class="lead"></p>
 
         <form id="finalForm" action="https://formsubmit.co/feng.punkzen@gmail.com" method="POST">
           <input type="hidden" name="_subject" value="活动邀约确认统计" />
@@ -620,6 +620,14 @@
         return;
       }
 
+      if (state.attendance === '本次不参加') {
+        setActiveHero(document.getElementById('leaveNow'));
+        document.getElementById('companionSection').style.display = 'none';
+        showStep('step0');
+        showStatus('leaveMsg');
+        return;
+      }
+
       buildSummary();
       showStep('step2');
     });
@@ -643,8 +651,10 @@
       }
 
       if (state.reconfirm === '暂不继续') {
-        showStatus('step2Warn');
-        document.getElementById('step2Warn').textContent = '已记录你暂不继续，本次流程到此。';
+        setActiveHero(document.getElementById('leaveNow'));
+        document.getElementById('companionSection').style.display = 'none';
+        showStep('step0');
+        showStatus('leaveMsg');
         return;
       }
 
