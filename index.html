@@ -347,8 +347,8 @@
           </div>
 
           <div class="field">
-            <label class="opt">
-              <input id="ruleConfirm0" type="checkbox" />
+            <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;font-size:14px;color:var(--text);line-height:1.6;">
+              <input id="ruleConfirm0" type="checkbox" style="display:inline;width:auto;margin-top:4px;" />
               <span>我已理解：邀请默认单人，伴侣除外；若同行，伴侣需再填一份问卷。</span>
             </label>
           </div>
@@ -596,6 +596,11 @@
 
     document.getElementById('toStep1').addEventListener('click', () => {
       hideStatus('step0Warn');
+      if (!document.getElementById('ruleConfirm0').checked) {
+        showStatus('step0Warn');
+        document.getElementById('step0Warn').textContent = '请先勾选理解规则，再进入下一步。';
+        return;
+      }
       state.companion = selectedValue('companion0') || '单人';
       showStep('step1');
     });
