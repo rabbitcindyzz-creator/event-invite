@@ -349,8 +349,12 @@
           <div class="field">
             <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;font-size:14px;color:var(--text);line-height:1.6;">
               <input id="ruleConfirm0" type="checkbox" style="display:inline;width:auto;margin-top:4px;" />
-              <span>我已理解：邀请默认单人，伴侣除外；若朋友同行，需再填一份问卷。</span>
+              <span>我已理解：邀请默认单人，伴侣除外；若朋友同行，需再填一份问卷，并备注介绍人。</span>
             </label>
+          </div>
+
+          <div class="field">
+            <input id="step0Note" type="text" placeholder="备注（选填）" />
           </div>
 
           <div class="actions">
@@ -466,6 +470,7 @@
           <input type="hidden" name="companion_choice" id="h_companion" />
           <input type="hidden" name="partner_info" id="h_partner" />
           <input type="hidden" name="reconfirm_result" id="h_reconfirm" />
+          <input type="hidden" name="step0_note" id="h_step0note" />
 
           <div class="field">
             <label class="label">姓名 / 昵称</label>
@@ -478,6 +483,10 @@
           <div class="field">
             <label class="label">补充备注（选填）</label>
             <textarea name="note"></textarea>
+          </div>
+          <div class="field">
+            <label class="label">首次过来异世夫星请备注介绍人</label>
+            <input name="introducer" type="text" placeholder="介绍人姓名或称呼" />
           </div>
 
           <div class="actions">
@@ -509,7 +518,8 @@
       attendance: '',
       companion: '',
       reconfirm: '',
-      exitSource: '' // 'homepage' | 'questionnaire' | 'reconfirm'
+      exitSource: '', // 'homepage' | 'questionnaire' | 'reconfirm'
+      step0Note: ''
     };
 
     const steps = ['step0', 'step1', 'step2', 'step3', 'stepLeave'];
@@ -598,6 +608,7 @@
       const name = document.getElementById('leaveName').value.trim();
       const contact = document.getElementById('leaveContact').value.trim();
       if (!name || !contact) return;
+      const step0Note = state.step0Note || document.getElementById('step0Note').value.trim();
       const iframe = document.createElement('iframe');
       iframe.name = 'leaveFrame';
       iframe.style.display = 'none';
@@ -614,7 +625,8 @@
           ? '本次不参加（首页直接退出）'
           : state.exitSource === 'questionnaire'
             ? '本次不参加（问卷后退出）'
-            : '本次不参加（最终确认后退出）'
+            : '本次不参加（最终确认后退出）',
+        'step0_note': step0Note
       };
       for (const [k, v] of Object.entries(fields)) {
         const input = document.createElement('input');
@@ -643,6 +655,7 @@
         return;
       }
       state.companion = selectedValue('companion0') || '单人';
+      state.step0Note = document.getElementById('step0Note').value.trim();
       showStep('step1');
     });
 
@@ -699,7 +712,8 @@
           '_subject': '活动邀约 — 可能参加记录',
           'guest_name': name,
           'contact': phone,
-          'attendance_choice': '可能参加（活动前几天请再联系我）'
+          'attendance_choice': '可能参加（活动前几天请再联系我）',
+          'step0_note': state.step0Note || document.getElementById('step0Note').value.trim()
         };
         for (const [k, v] of Object.entries(fields)) {
           const input = document.createElement('input');
@@ -780,6 +794,7 @@
       this.target = 'finalFrame';
 
       const guestName = this.querySelector('input[name="guest_name"]').value.trim();
+      document.getElementById('h_step0note').value = state.step0Note || document.getElementById('step0Note').value.trim();
       document.getElementById('confirmName').textContent = guestName + '，';
       showStatus('submitOk');
       this.style.display = 'none';
