@@ -347,6 +347,21 @@
           </div>
 
           <div class="field">
+            <label class="label">你预计参加哪段？</label>
+            <div class="options" id="arrivalGroup">
+              <label class="opt"><input type="checkbox" name="arrival_time" value="14:30 准时到场（完整体验）" />
+                <span>14:30 准时到场<small>完整体验</small></span>
+              </label>
+              <label class="opt"><input type="checkbox" name="arrival_time" value="15:00 观影前到场" />
+                <span>15:00 观影前到场</span>
+              </label>
+              <label class="opt"><input type="checkbox" name="arrival_time" value="18:00 After Party" />
+                <span>18:00 After Party</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
             <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;font-size:14px;color:var(--text);line-height:1.6;">
               <input id="ruleConfirm0" type="checkbox" style="display:inline;width:auto;margin-top:4px;" />
               <span>我已理解：邀请默认单人，伴侣除外；若朋友同行，需再填一份问卷，并备注介绍人。</span>
@@ -471,6 +486,7 @@
           <input type="hidden" name="partner_info" id="h_partner" />
           <input type="hidden" name="reconfirm_result" id="h_reconfirm" />
           <input type="hidden" name="step0_note" id="h_step0note" />
+          <input type="hidden" name="arrival_time" id="h_arrival" />
 
           <div class="field">
             <label class="label">姓名 / 昵称</label>
@@ -519,7 +535,8 @@
       companion: '',
       reconfirm: '',
       exitSource: '', // 'homepage' | 'questionnaire' | 'reconfirm'
-      step0Note: ''
+      step0Note: '',
+      arrivalTime: ''
     };
 
     const steps = ['step0', 'step1', 'step2', 'step3', 'stepLeave'];
@@ -626,7 +643,8 @@
           : state.exitSource === 'questionnaire'
             ? '本次不参加（问卷后退出）'
             : '本次不参加（最终确认后退出）',
-        'step0_note': step0Note
+        'step0_note': step0Note,
+        'arrival_time': state.arrivalTime || Array.from(document.querySelectorAll('input[name="arrival_time"]:checked')).map(cb => cb.value).join('、')
       };
       for (const [k, v] of Object.entries(fields)) {
         const input = document.createElement('input');
@@ -656,6 +674,8 @@
       }
       state.companion = selectedValue('companion0') || '单人';
       state.step0Note = document.getElementById('step0Note').value.trim();
+      const arrivalChecked = document.querySelectorAll('input[name="arrival_time"]:checked');
+      state.arrivalTime = Array.from(arrivalChecked).map(cb => cb.value).join('、');
       showStep('step1');
     });
 
@@ -713,7 +733,8 @@
           'guest_name': name,
           'contact': phone,
           'attendance_choice': '可能参加（活动前几天请再联系我）',
-          'step0_note': state.step0Note || document.getElementById('step0Note').value.trim()
+          'step0_note': state.step0Note || document.getElementById('step0Note').value.trim(),
+          'arrival_time': state.arrivalTime || Array.from(document.querySelectorAll('input[name="arrival_time"]:checked')).map(cb => cb.value).join('、')
         };
         for (const [k, v] of Object.entries(fields)) {
           const input = document.createElement('input');
@@ -795,6 +816,8 @@
 
       const guestName = this.querySelector('input[name="guest_name"]').value.trim();
       document.getElementById('h_step0note').value = state.step0Note || document.getElementById('step0Note').value.trim();
+      const arrChecked = document.querySelectorAll('input[name="arrival_time"]:checked');
+      document.getElementById('h_arrival').value = state.arrivalTime || Array.from(arrChecked).map(cb => cb.value).join('、');
       document.getElementById('confirmName').textContent = guestName + '，';
       showStatus('submitOk');
       this.style.display = 'none';
